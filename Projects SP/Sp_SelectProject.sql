@@ -1,0 +1,34 @@
+USE Avior
+DBCC FREEPROCCACHE WITH NO_INFOMSGS
+GO
+
+IF ( OBJECT_ID('dbo.SelectProject') IS NOT NULL ) 
+   DROP PROCEDURE dbo.SelectProject
+GO
+
+CREATE PROCEDURE dbo.SelectProject
+	@IdProject INT = NULL
+AS
+BEGIN
+	BEGIN TRY
+	
+			IF @IdProject IS NULL
+				BEGIN
+					SELECT * FROM dbo.Projects WITH (NOLOCK)
+				END
+			ELSE
+				BEGIN
+					SELECT * FROM dbo.Projects WITH (NOLOCK)
+						WHERE IdProject = @IdProject	
+				END	
+
+	END TRY
+
+	BEGIN CATCH
+
+	SELECT ERROR_MESSAGE() AS ERROR,
+				ERROR_NUMBER() AS ERROR_NRO
+
+	END CATCH;
+END
+GO

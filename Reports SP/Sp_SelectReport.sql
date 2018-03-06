@@ -1,0 +1,34 @@
+USE Avior
+DBCC FREEPROCCACHE WITH NO_INFOMSGS
+GO
+
+IF ( OBJECT_ID('dbo.SelectReport') IS NOT NULL ) 
+   DROP PROCEDURE dbo.SelectReport
+GO
+
+CREATE PROCEDURE dbo.SelectReport
+	@IdReport INT = NULL
+AS
+BEGIN
+	BEGIN TRY
+	
+			IF @IdReport IS NULL
+				BEGIN
+					SELECT * FROM dbo.Reports WITH (NOLOCK)
+				END
+			ELSE
+				BEGIN
+					SELECT * FROM dbo.Reports WITH (NOLOCK)
+						WHERE IdReport = @IdReport	
+				END	
+
+	END TRY
+
+	BEGIN CATCH
+
+	SELECT ERROR_MESSAGE() AS ERROR,
+				ERROR_NUMBER() AS ERROR_NRO
+
+	END CATCH;
+END
+GO

@@ -1,0 +1,34 @@
+USE Avior
+DBCC FREEPROCCACHE WITH NO_INFOMSGS
+GO
+
+IF ( OBJECT_ID('dbo.SelectUsersSystem') IS NOT NULL ) 
+   DROP PROCEDURE dbo.SelectUsersSystem
+GO
+
+CREATE PROCEDURE dbo.SelectUsersSystem
+	@IdUserSystem INT = NULL
+AS
+BEGIN
+	BEGIN TRY
+	
+			IF @IdUserSystem IS NULL
+				BEGIN
+					SELECT * FROM dbo.UsersSystem WITH (NOLOCK)
+				END
+			ELSE
+				BEGIN
+					SELECT * FROM dbo.UsersSystem WITH (NOLOCK)
+						WHERE IdUserSystem = @IdUserSystem	
+				END	
+
+	END TRY
+
+	BEGIN CATCH
+
+	SELECT ERROR_MESSAGE() AS ERROR,
+				ERROR_NUMBER() AS ERROR_NRO
+
+	END CATCH;
+END
+GO
