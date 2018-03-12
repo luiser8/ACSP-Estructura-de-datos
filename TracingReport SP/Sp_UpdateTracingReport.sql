@@ -1,11 +1,9 @@
 USE Avior
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-
 IF ( OBJECT_ID('dbo.UpdateTracReport') IS NOT NULL ) 
    DROP PROCEDURE dbo.UpdateTracReport
 GO
-
 CREATE PROCEDURE dbo.UpdateTracReport(
 	@IdTracReport INT,
 	@IdReport INT,
@@ -17,19 +15,14 @@ CREATE PROCEDURE dbo.UpdateTracReport(
 	@WeekTracReport VARCHAR(11),
 	@DataColumView VARCHAR(125))
 AS
-
 BEGIN
-
 SET NOCOUNT ON;
-
 	BEGIN TRY
-		IF @IdTracReport IS NOT NULL
-			
+		IF @IdTracReport IS NOT NULL			
 			IF EXISTS(SELECT IdTracReport, IdReport 
 							FROM dbo.TracingReports
 							WHERE IdTracReport = @IdTracReport AND
 									IdReport = @IdReport)
-
 				BEGIN
 					UPDATE dbo.TracingReports
 						SET IdReport = @IdReport,
@@ -42,13 +35,9 @@ SET NOCOUNT ON;
 							DataColumView = @DataColumView 
 								WHERE IdTracReport = @IdTracReport
 				END
-
 	END TRY
-
 	BEGIN CATCH
-
 	SELECT ERROR_MESSAGE() AS ERROR,
 				ERROR_NUMBER() AS ERROR_NRO
-
 	END CATCH;
 END
