@@ -1,193 +1,193 @@
---TABLE DEPARTMENTS
-CREATE TABLE Departments
+--TABLA DEPARTAMENTOS
+CREATE TABLE Departamentos
      ( 
-        IdDepartment				INT	IDENTITY(1,1)			NOT NULL  , 
-		NameDepartment				VARCHAR(125)				NOT NULL  ,
-		DescDepartment				VARCHAR(255)				NOT NULL  ,
-		StatusDepartment			TINYINT						NOT NULL	DEFAULT 1, -- 1 On 0, Off 
-		CreateDepartment			DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
-			CONSTRAINT PK_Department PRIMARY KEY CLUSTERED (IdDepartment ASC) ON [PRIMARY]
+        DptoId						INT	IDENTITY(1,1)			NOT NULL  , 
+		Nombre						VARCHAR(125)				NOT NULL  ,
+		Descripcion					VARCHAR(255)				NOT NULL  ,
+		Estado						TINYINT						NOT NULL	DEFAULT 1, -- 1 On 0, Off 
+		Fecha						DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
+			CONSTRAINT PK_Departamento PRIMARY KEY CLUSTERED (DptoId ASC) ON [PRIMARY]
      )		
 GO
 
---TABLE USERS SYSTEM
-CREATE TABLE UsersSystem
+--TABLA USUARIOS SISTEMA
+CREATE TABLE UsuarioSistema
      ( 
-        IdUserSystem				INT	IDENTITY(1,1)			NOT NULL  , 
-		IdDepartment				INT							NOT NULL  ,
-		FirstNameUser				VARCHAR(95)					NOT NULL  ,
-		LastNameUser				VARCHAR(95)					NOT NULL  ,
-		EmailUser					VARCHAR(95)					NOT NULL  ,
-		PasswordUser				VARCHAR(125)				NOT NULL  ,
-		TypeUserSystem				TINYINT						NOT NULL	DEFAULT 3, -- 3 Simple user, 2 Administrador, 1 Super Administrador
-		StatusUserSystem			TINYINT						NOT NULL	DEFAULT 1, -- 1	On, 0 Off	
-		CreateUserSystem			DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
-			CONSTRAINT PK_UsersSystem PRIMARY KEY CLUSTERED (IdUserSystem ASC) ON [PRIMARY],
-			FOREIGN KEY (IdDepartment) REFERENCES Departments(IdDepartment)
+        UsuarioId					INT	IDENTITY(1,1)			NOT NULL  , 
+		DptoId						INT							NOT NULL  ,
+		Nombres						VARCHAR(95)					NOT NULL  ,
+		Apellidos					VARCHAR(95)					NOT NULL  ,
+		Correo						VARCHAR(95)					NOT NULL  ,
+		Clave						VARCHAR(125)				NOT NULL  ,
+		NivelAcceso					TINYINT						NOT NULL	DEFAULT 3, -- 3 Usuario simple, 2 Administrador, 1 Super Administrador
+		Estado						TINYINT						NOT NULL	DEFAULT 1, -- 1	On, 0 Off	
+		Fecha						DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
+			CONSTRAINT PK_UsersSystem PRIMARY KEY CLUSTERED (UsuarioId ASC) ON [PRIMARY],
+			FOREIGN KEY (DptoId) REFERENCES Departamentos(DptoId)
 				ON DELETE CASCADE ON UPDATE CASCADE
      )			
 GO
 
---TABLE PROJECTS
-CREATE TABLE Projects
+--TABLA PROYECTOS
+CREATE TABLE Proyectos
      ( 
-        IdProject					INT	IDENTITY(1,1)			NOT NULL  , 
-		CodProject					VARCHAR(25)					NOT NULL  , 
-		IdDepartment				INT							NOT NULL  ,
-		IdUserSystem				INT	REFERENCES UsersSystem	NOT NULL  ,
-        NameProject					VARCHAR(125)				NOT NULL  , 
-        DescProject					VARCHAR(255)				NOT NULL  ,         
-        GraphicProject				VARCHAR(25)					NOT NULL  , 
-		YearProject					VARCHAR(11)					NOT NULL  ,
-		DateStartProject			VARCHAR(11)					NOT NULL  ,
-		DateEndProject				VARCHAR(11)					NOT NULL  ,
-		StatusProject				TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On active, 2 Culminated, 3 Replanning
-		CreateProject				DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
-			CONSTRAINT PK_Projects PRIMARY KEY CLUSTERED (IdProject ASC) ON [PRIMARY],
-			FOREIGN KEY (IdDepartment) REFERENCES Departments(IdDepartment)
+        ProyectoId					INT	IDENTITY(1,1)			NOT NULL  , 
+		Codigo						VARCHAR(25)					NOT NULL  , 
+		DptoId						INT							NOT NULL  ,
+		UsuarioId					INT	REFERENCES UsuarioSistema	NOT NULL  ,
+        Nombre						VARCHAR(125)				NOT NULL  , 
+        Descripcion					VARCHAR(255)				NOT NULL  ,         
+        Grafico						VARCHAR(25)					NOT NULL  , --Linea, Columna, Torta
+		Anio						VARCHAR(11)					NOT NULL  ,
+		FechaInicio					VARCHAR(11)					NOT NULL  ,
+		FechaFin					VARCHAR(11)					NOT NULL  ,
+		Estado						TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 Activo, 2 Culminado, 3 Replanificado
+		Fecha						DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
+			CONSTRAINT PK_Proyectos PRIMARY KEY CLUSTERED (ProyectoId ASC) ON [PRIMARY],
+			FOREIGN KEY (DptoId) REFERENCES Departamentos(DptoId)
 				ON DELETE CASCADE ON UPDATE CASCADE
      )		
 GO
 
---TABLE REPLANNING PROJECTS
-CREATE TABLE Replanning
+--TABLA PARAMETROS E INTERVALOS
+CREATE TABLE Parametros
      ( 
-        IdReplanning				INT	IDENTITY(1,1)			NOT NULL  , 
-		IdProject					INT							NOT NULL  , 
-		DescReplanning				VARCHAR(255)				NOT NULL  ,
-		DateAfReplanning			VARCHAR(11)					NOT NULL  ,
-		DateBeReplanning			VARCHAR(11)					NOT NULL  ,
-		StatusReplanning			TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On active
-		CreateReplanning			DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
-			CONSTRAINT PK_Replanning PRIMARY KEY CLUSTERED (IdReplanning ASC) ON [PRIMARY],
-			FOREIGN KEY (IdProject) REFERENCES Projects(IdProject)
+        ParametroId					INT	IDENTITY(1,1)			NOT NULL  ,
+		ProyectoId					INT							NOT NULL  , 
+		Semana						VARCHAR(11)					NOT NULL  , --Semana
+		CantidadDias				TINYINT						NOT NULL  , -- Cantidad de dias que hay entre fecha inicial del proyecto y final
+		Avance						TINYINT						NOT NULL	DEFAULT 0 , --Avance planificado 0 Cuando se crea nuevo, 1 cuando se vaya creando las lineas
+		EstadoSemana				TINYINT						NOT NULL	DEFAULT 1 , -- 1 Activo para colocarle los datos de los avances planificados, 0 cuando ya los establecemos
+		Establecido					TINYINT						NOT NULL	DEFAULT 0 , -- 1 Establecido para que se muestre, 0 para que se oculte
+		Estado						TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On Activo
+		Fecha						DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
+			CONSTRAINT PK_Parametros PRIMARY KEY CLUSTERED (ParametroId ASC) ON [PRIMARY],
+			FOREIGN KEY (ProyectoId) REFERENCES Proyectos(ProyectoId)
 				ON DELETE CASCADE ON UPDATE CASCADE
      )		
 GO
 
---TABLE WEEK PARAMETERS
-CREATE TABLE Parameter
+--TABLA REPLANIFICACION DE PROYECTOS
+CREATE TABLE Replanificacion
      ( 
-        IdParameter					INT	IDENTITY(1,1)			NOT NULL  ,
-		IdProject					INT							NOT NULL  , 
-		WeekParameter				VARCHAR(11)					NOT NULL  , --Semana
-		WeekCount					TINYINT						NOT NULL  ,
-		WeekAdvance					TINYINT						NOT NULL	DEFAULT 0 , --Avance planificado 0 Cuando se crea nuevo, 1 cuando se vaya creando las lineas
-		WeekStatus					TINYINT						NOT NULL	DEFAULT 1 , -- 1 Activo para colocarle los datos de los avances planificados, 0 cuando ya los establecemos
-		WeekSee						TINYINT						NOT NULL	DEFAULT 0 , -- 1 Establecido para que se muestre, 0 para que se oculte
-		StatusParameter				TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On active
-		CreateDepartment			DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
-			CONSTRAINT PK_Parameter PRIMARY KEY CLUSTERED (IdParameter ASC) ON [PRIMARY],
-			FOREIGN KEY (IdProject) REFERENCES Projects(IdProject)
+        ReplanId					INT	IDENTITY(1,1)			NOT NULL  , 
+		ProyectoId					INT							NOT NULL  , 
+		Descripcion					VARCHAR(255)				NOT NULL  ,
+		FechaAnterior				VARCHAR(11)					NOT NULL  ,
+		FechaPosterior				VARCHAR(11)					NOT NULL  ,
+		Estado						TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On active
+		Fecha						DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
+			CONSTRAINT PK_Replanificacion PRIMARY KEY CLUSTERED (ReplanId ASC) ON [PRIMARY],
+			FOREIGN KEY (ProyectoId) REFERENCES Proyectos(ProyectoId)
 				ON DELETE CASCADE ON UPDATE CASCADE
      )		
 GO
 
---TABLE TRACING PROJECT
-CREATE TABLE TracingProjects
+--TABLA SEGUIMIENTO DE ACTIVIDADES
+CREATE TABLE ActProyectos
      ( 
-        IdTracProject				INT	IDENTITY(1,1)			NOT NULL  , 
-		TypeTracProject				TINYINT						NOT NULL  , -- 1 Proyecto estado normal, 2 Proyecto replanificado
-		IdProject					INT							NOT NULL  , 
-		IdParameter					INT							NOT NULL  ,
-		DescTracProject				VARCHAR(255)				NOT NULL  ,
-		PlanTracProject				VARCHAR(11)					NOT NULL  ,
-		RealTracProject				VARCHAR(11)					NOT NULL  ,
-		DateTracProject				VARCHAR(11)					NOT NULL  ,
-		DevTracProject				VARCHAR(11)					NOT NULL  , --Desviacion
-		StatusTracProject			TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On active
-		CreateTracProject			DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
-			CONSTRAINT PK_TracingProjects PRIMARY KEY CLUSTERED (IdTracProject ASC) ON [PRIMARY],
-			FOREIGN KEY (IdProject) REFERENCES Projects(IdProject)
+        ActProyId					INT	IDENTITY(1,1)			NOT NULL  , 
+		TipoAct						TINYINT						NOT NULL  , -- 1 Proyecto estado normal, 2 Proyecto replanificado
+		ProyectoId					INT							NOT NULL  , 
+		ParametroId					INT							NOT NULL  ,
+		DescripcionAct				VARCHAR(255)				NOT NULL  ,
+		PlanAct						VARCHAR(11)					NOT NULL  , --Avance Planificado
+		RealAct						VARCHAR(11)					NOT NULL  , -- Avance Real
+		FechaAct					VARCHAR(11)					NOT NULL  ,
+		DesviacionAct				VARCHAR(11)					NOT NULL  , --Desviacion = Avance planificado - Avance Real
+		Estado						TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On Activo
+		Fecha						DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
+			CONSTRAINT PK_ActProyectos PRIMARY KEY CLUSTERED (ActProyId ASC) ON [PRIMARY],
+			FOREIGN KEY (ProyectoId) REFERENCES Proyectos(ProyectoId)
 				ON DELETE CASCADE ON UPDATE CASCADE
      )		
 GO
 
---TABLE STATS PROYECTS
-CREATE TABLE StatsProjects
+--TABLA ESTADISTICAS DE PROYECTOS
+CREATE TABLE EstProyectos
      ( 
-        IdStatProject				INT	IDENTITY(1,1)			NOT NULL  , 
-		IdProject					INT							NOT NULL  , 
-		PlanTracProject				VARCHAR(11)					NOT NULL  ,
-		RealTracProject				VARCHAR(11)					NOT NULL  ,
-		DateStatProject				VARCHAR(11)					NOT NULL  ,
-		StatusStatProject			TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On active
-		CreateStatProject			DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
-			CONSTRAINT PK_StatsProjects PRIMARY KEY CLUSTERED (IdStatProject ASC) ON [PRIMARY],
-			FOREIGN KEY (IdProject) REFERENCES Projects(IdProject)
+        EstProyId					INT	IDENTITY(1,1)			NOT NULL  , 
+		ProyectoId					INT							NOT NULL  , 
+		PlanEst						VARCHAR(11)					NOT NULL  ,
+		RealEst						VARCHAR(11)					NOT NULL  ,
+		FechacEst					VARCHAR(11)					NOT NULL  ,
+		Estado						TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On Activo
+		Fecha						DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
+			CONSTRAINT PK_EstProyectos PRIMARY KEY CLUSTERED (EstProyId ASC) ON [PRIMARY],
+			FOREIGN KEY (ProyectoId) REFERENCES Proyectos(ProyectoId)
 				ON DELETE CASCADE ON UPDATE CASCADE
      )		
 GO
 
---	TABLE REPORTS
-CREATE TABLE Reports
+--	TABLA REPORTES
+CREATE TABLE Reportes
      ( 
-        IdReport					INT	IDENTITY(1,1)			NOT NULL  , 
-		CodReport					VARCHAR(25)					NOT NULL  , 
-		IdUserSystem				INT	REFERENCES UsersSystem	NOT NULL  ,
-		IdDepartment				INT							NOT NULL  ,
-		NameReport					VARCHAR(125)				NOT NULL  , 
-		DescReport					VARCHAR(255)				NOT NULL  ,
-		GraphicReport				VARCHAR(25)					NOT NULL  , 
-		SymbolReport				VARCHAR(11)					NOT NULL  ,
-		DateStartReport				VARCHAR(11)					NOT NULL  ,
-		YearReport					VARCHAR(11)					NOT NULL  ,
-		StatusReport				TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On active
-		CreateReport				DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
-			CONSTRAINT PK_Report PRIMARY KEY CLUSTERED (IdReport ASC) ON [PRIMARY],
-			FOREIGN KEY (IdDepartment) REFERENCES Departments(IdDepartment)
+        ReporteId					INT	IDENTITY(1,1)			NOT NULL  , 
+		Codigo						VARCHAR(25)					NOT NULL  , 
+		UsuarioId					INT	REFERENCES UsuarioSistema	NOT NULL  ,
+		DptoId						INT							NOT NULL  ,
+		Nombre						VARCHAR(125)				NOT NULL  , 
+		Descripcion					VARCHAR(255)				NOT NULL  ,
+		Grafico						VARCHAR(25)					NOT NULL  , --Linea, Columna, Torta
+		Simbolo						VARCHAR(11)					NOT NULL  , --#, %
+		FechaInicio					VARCHAR(11)					NOT NULL  ,
+		Anio						VARCHAR(11)					NOT NULL  ,
+		Estado						TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On Activo
+		Fecha						DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
+			CONSTRAINT PK_Reporte PRIMARY KEY CLUSTERED (ReporteId ASC) ON [PRIMARY],
+			FOREIGN KEY (DptoId) REFERENCES Departamentos(DptoId)
 				ON DELETE CASCADE ON UPDATE CASCADE
      )		
 GO
 
---SERIES FOR AND LEYEND REPORTS
-CREATE TABLE SeriesReports
+--SERIES PARA LOS REPORTES
+CREATE TABLE SeriesReportes
      ( 
-        IdSerieReport				INT	IDENTITY(1,1)			NOT NULL  , 
-		IdReport					INT							NOT NULL  , 
-		FirstSerie					VARCHAR(125)				NOT NULL  ,
-		SecondSerie					VARCHAR(125)				NOT NULL  ,
-		ThirdSerie					VARCHAR(125)				NOT NULL  ,
-		FourthSerie					VARCHAR(125)				NOT NULL  ,
-		StatusSerieReport			TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On active
-		CreateSLReport				DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
-			CONSTRAINT PK_SeriesReport PRIMARY KEY CLUSTERED (IdSerieReport ASC) ON [PRIMARY],
-			FOREIGN KEY (IdReport) REFERENCES Reports(IdReport)
+        SerieRepId					INT	IDENTITY(1,1)			NOT NULL  , 
+		ReporteId					INT							NOT NULL  , 
+		PrimSerie					VARCHAR(125)				NOT NULL  ,
+		SegSerie					VARCHAR(125)				NOT NULL  ,
+		TercSerie					VARCHAR(125)				NOT NULL  ,
+		CuarSerie					VARCHAR(125)				NOT NULL  ,
+		Estado						TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On Activo
+		Fecha						DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
+			CONSTRAINT PK_SeriesReportes PRIMARY KEY CLUSTERED (SerieRepId ASC) ON [PRIMARY],
+			FOREIGN KEY (ReporteId) REFERENCES Reportes(ReporteId)
 				ON DELETE CASCADE ON UPDATE CASCADE
      )			
 GO
 
---TABLE TRACING REPORT
-CREATE TABLE TracingReports
+--TABLA ACTIVIDADES DE REPORTES
+CREATE TABLE ActReportes
      ( 
-        IdTracReport				INT	IDENTITY(1,1)			NOT NULL  , 
-		IdReport					INT							NOT NULL  , 
-		DescTracReport				VARCHAR(125)				NOT NULL  ,
-		FirstValue					VARCHAR(125)				NOT NULL  ,
-		SecondValue					VARCHAR(125)				NOT NULL  ,
-		ThirdValue					VARCHAR(125)				NOT NULL  ,
-		FourthValue					VARCHAR(125)				NOT NULL  ,
-		WeekTracReport				VARCHAR(11)					NOT NULL  ,
-		DataColumView				VARCHAR(155)				NOT NULL  , --data_report
-		StatusTracReport			TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On active
-		CreateTracReport			DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
-			CONSTRAINT PK_TracingReport PRIMARY KEY CLUSTERED (IdTracReport ASC) ON [PRIMARY],
-			FOREIGN KEY (IdReport) REFERENCES Reports(IdReport)
+        ActRepId					INT	IDENTITY(1,1)			NOT NULL  , 
+		ReporteId					INT							NOT NULL  , 
+		DescAct						VARCHAR(125)				NOT NULL  ,
+		PrimAct						VARCHAR(125)				NOT NULL  ,
+		SegAct						VARCHAR(125)				NOT NULL  ,
+		TercAct						VARCHAR(125)				NOT NULL  ,
+		CuartAct					VARCHAR(125)				NOT NULL  ,
+		Contenido					VARCHAR(125)				NOT NULL  , --Dependiendo del reporte va variar
+		SemAct						VARCHAR(11)					NOT NULL  , --Semana 13-03-2018
+		Estado						TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On Activo
+		Fecha						DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
+			CONSTRAINT PK_TracingReport PRIMARY KEY CLUSTERED (ActRepId ASC) ON [PRIMARY],
+			FOREIGN KEY (ReporteId) REFERENCES Reportes(ReporteId)
 				ON DELETE CASCADE ON UPDATE CASCADE
      )				
 GO
 
---TABLE STATS REPORTS
-CREATE TABLE StatsReports
+--TABLA ESTADISTICAS DE REPORTES
+CREATE TABLE EstReportes
      ( 
-        IdStatReport				INT	IDENTITY(1,1)			NOT NULL  , 
-		IdReport					INT							NOT NULL  , 
-		DescStatReport				VARCHAR(125)				NOT NULL  , --Tarea o semana 5
-		DateStatReport				VARCHAR(11)					NOT NULL  ,
-		StatusStatReport			TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On active
-		CreateStatReport			DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
-			CONSTRAINT PK_StatsReports PRIMARY KEY CLUSTERED (IdStatReport ASC) ON [PRIMARY],
-			FOREIGN KEY (IdReport) REFERENCES Reports(IdReport)
+        EstRepId					INT	IDENTITY(1,1)			NOT NULL  , 
+		ReporteId					INT							NOT NULL  , 
+		Descripcion					VARCHAR(125)				NOT NULL  , --Tarea o semana nro 8
+		FechaEst					VARCHAR(11)					NOT NULL  ,
+		Estado						TINYINT						NOT NULL	DEFAULT 1, --0 Off, 1 On Activo
+		Fecha						DATETIME					NOT NULL	DEFAULT (GETDATE()) ,
+			CONSTRAINT PK_EstReportes PRIMARY KEY CLUSTERED (EstRepId ASC) ON [PRIMARY],
+			FOREIGN KEY (ReporteId) REFERENCES Reportes(ReporteId)
 				ON DELETE CASCADE ON UPDATE CASCADE
      )		
 GO
