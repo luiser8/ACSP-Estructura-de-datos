@@ -31,7 +31,7 @@ BEGIN
 								Proyectos.Estado, Proyectos.Grafico
 								 FROM dbo.ActProyectos WITH (NOLOCK)
 								 INNER JOIN Proyectos AS Proyectos ON Proyectos.ProyectoId = ActProyectos.ProyectoId
-									WHERE ActProyectos.ProyectoId = @ProyectoId
+									WHERE ActProyectos.ProyectoId = @ProyectoId AND ActProyectos.Estado = 1
 										ORDER BY ActProyectos.FechaAct
 					END	
 	END TRY

@@ -38,7 +38,7 @@ BEGIN
 							WHERE ActReportes.ReporteId = @ReporteId AND ActReportes.SemAct IN
 								(SELECT MAX(ActReportes.SemAct)
 									FROM dbo.ActReportes 
-										WHERE ActReportes.ReporteId = @ReporteId)
+										WHERE ActReportes.ReporteId = @ReporteId AND ActReportes.Estado = 1)
 				END	
 	END TRY
 		BEGIN CATCH
