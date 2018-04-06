@@ -3,13 +3,13 @@
 -- Create date: 12-03-2018
 -- Description: Borrado lógico replanificacion de Proyectos
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ReplanificacionEliminar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ReplanificacionEliminar
+IF ( OBJECT_ID('app.ReplanificacionEliminar') IS NOT NULL ) 
+   DROP PROCEDURE app.ReplanificacionEliminar
 GO
-CREATE PROCEDURE dbo.ReplanificacionEliminar(
+CREATE PROCEDURE app.ReplanificacionEliminar(
 	@ReplanId INT,
 	@ProyectoId INT)
 AS
@@ -17,7 +17,7 @@ BEGIN
 SET NOCOUNT ON;
 	BEGIN TRY	
 		IF NOT EXISTS(SELECT ReplanId, ProyectoId
-						FROM dbo.Replanificacion
+						FROM [app].[Replanificacion]
 						WHERE ReplanId = @ReplanId AND 
 								ProyectoId = @ProyectoId)
 					BEGIN
@@ -25,15 +25,15 @@ SET NOCOUNT ON;
 						RETURN 1;					
 					END
 			BEGIN
-				UPDATE dbo.Replanificacion SET Estado = 0 
+				UPDATE [app].[Replanificacion] SET Estado = 0 
 						WHERE ReplanId = @ReplanId AND ProyectoId = @ProyectoId
 			END
 				IF EXISTS(SELECT ProyectoId, Estado
-					FROM dbo.Proyectos
+					FROM [app].[Proyectos]
 					WHERE ProyectoId = @ProyectoId AND
 							Estado = 3)			
 					BEGIN
-						UPDATE dbo.Proyectos SET Estado = 1
+						UPDATE [app].[Proyectos] SET Estado = 1
 						WHERE ProyectoId = @ProyectoId
 					END
 	END TRY

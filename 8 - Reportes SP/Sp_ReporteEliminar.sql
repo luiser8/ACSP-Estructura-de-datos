@@ -3,23 +3,23 @@
 -- Create date: 12-03-2018
 -- Description: Borrado lógico Reportes
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ReporteEliminar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ReporteEliminar
+IF ( OBJECT_ID('app.ReporteEliminar') IS NOT NULL ) 
+   DROP PROCEDURE app.ReporteEliminar
 GO
-CREATE PROCEDURE dbo.ReporteEliminar(
+CREATE PROCEDURE app.ReporteEliminar(
 	@ReporteId INT)
 AS
 BEGIN
 SET NOCOUNT ON;
 	BEGIN TRY
 		IF EXISTS(SELECT ReporteId 
-						FROM dbo.Reportes
+						FROM [app].[Reportes]
 						WHERE ReporteId = @ReporteId)
 		BEGIN
-			UPDATE dbo.Reportes SET Estado = 0 WHERE ReporteId = @ReporteId
+			UPDATE [app].[Reportes] SET Estado = 0 WHERE ReporteId = @ReporteId
 		END
 	END TRY
 		BEGIN CATCH

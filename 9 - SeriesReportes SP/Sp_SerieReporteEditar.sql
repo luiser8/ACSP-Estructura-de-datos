@@ -3,31 +3,31 @@
 -- Create date: 12-03-2018
 -- Description: Editar SerieReportes
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.SerieReporteEditar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.SerieReporteEditar
+IF ( OBJECT_ID('app.SerieReporteEditar') IS NOT NULL ) 
+   DROP PROCEDURE app.SerieReporteEditar
 GO
-CREATE PROCEDURE dbo.SerieReporteEditar(
+CREATE PROCEDURE app.SerieReporteEditar(
 	@SerieRepId VARCHAR(50),
 	@ReporteId VARCHAR(50),
-	@PrimSerie VARCHAR(125),
-	@SegSerie VARCHAR(125),
-	@TercSerie VARCHAR(125),
-	@CuarSerie VARCHAR(125))
+	@PrimeraSerie VARCHAR(125),
+	@SegundaSerie VARCHAR(125),
+	@TerceraSerie VARCHAR(125),
+	@CuartaSerie VARCHAR(125))
 AS
 BEGIN
 SET NOCOUNT ON;
 	BEGIN TRY	
 		IF ISNUMERIC(@ReporteId) = 1
 				IF EXISTS(SELECT ReporteId, @ReporteId
-						FROM dbo.SeriesReportes
+						FROM [app].[SeriesReportes]
 						WHERE ReporteId = @ReporteId)
 				BEGIN
-					UPDATE dbo.SeriesReportes SET ReporteId = @ReporteId, PrimSerie = @PrimSerie,
-												SegSerie = @SegSerie, TercSerie = @TercSerie,
-												CuarSerie = @CuarSerie
+					UPDATE [app].[SeriesReportes] SET ReporteId = @ReporteId, PrimeraSerie = @PrimeraSerie,
+												SegundaSerie = @SegundaSerie, TerceraSerie = @TerceraSerie,
+												CuartaSerie = @CuartaSerie
 												WHERE SerieRepId = @SerieRepId
 				END
 	END TRY

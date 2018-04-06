@@ -3,13 +3,13 @@
 -- Create date: 12-03-2018
 -- Description: Join Actividades al Reportes
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ActReporteJoin') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ActReporteJoin
+IF ( OBJECT_ID('app.ActReporteJoin') IS NOT NULL ) 
+   DROP PROCEDURE app.ActReporteJoin
 GO
-CREATE PROCEDURE dbo.ActReporteJoin
+CREATE PROCEDURE app.ActReporteJoin
 	@ReporteId INT = NULL
 AS
 SET NOCOUNT ON;
@@ -17,28 +17,29 @@ BEGIN
 	BEGIN TRY
 		IF @ReporteId IS NOT NULL --Por Id
 			IF EXISTS(SELECT ReporteId
-							FROM dbo.Reportes
+							FROM [app].[Reportes]
 							WHERE ReporteId = @ReporteId)
 				BEGIN
-					SELECT ActReportes.ActRepId, ActReportes.ReporteId,
-							ActReportes.DescAct, ActReportes.PrimAct,
-							ActReportes.SegAct, ActReportes.TercAct,
-							ActReportes.CuartAct, ActReportes.Contenido, ActReportes.SemAct,
-								SeriesReportes.SerieRepId, SeriesReportes.ReporteId,
-								SeriesReportes.PrimSerie, SeriesReportes.SegSerie,
-								SeriesReportes.TercSerie, SeriesReportes.CuarSerie,
-									Reportes.ReporteId, Reportes.Codigo, 
-									Reportes.UsuarioId, Reportes.DptoId,
-									Reportes.Nombre, Reportes.Descripcion, 
-									Reportes.Grafico, Reportes.Simbolo,
-									Reportes.FechaInicio, Reportes.Anio
-						 FROM dbo.ActReportes WITH (NOLOCK)
-						 INNER JOIN Reportes AS Reportes ON Reportes.ReporteId = ActReportes.ReporteId
-						 LEFT OUTER JOIN SeriesReportes AS SeriesReportes ON Reportes.ReporteId = SeriesReportes.ReporteId
-							WHERE ActReportes.ReporteId = @ReporteId AND ActReportes.SemAct IN
-								(SELECT MAX(ActReportes.SemAct)
-									FROM dbo.ActReportes 
-										WHERE ActReportes.ReporteId = @ReporteId AND ActReportes.Estado = 1)
+					SELECT [app].[ActReportes].ActRepId, [app].[ActReportes].ReporteId,
+							[app].[ActReportes].Descripcion, [app].[ActReportes].PrimeraAct,
+							[app].[ActReportes].SegundaAct, [app].[ActReportes].TerceraAct,
+							[app].[ActReportes].CuartaAct, [app].[ActReportes].Contenido, [app].[ActReportes].SemanaAct,
+								[app].[SeriesReportes].SerieRepId, [app].[SeriesReportes].ReporteId,
+								[app].[SeriesReportes].PrimeraSerie, [app].[SeriesReportes].SegundaSerie,
+								[app].[SeriesReportes].TerceraSerie, [app].[SeriesReportes].CuartaSerie,
+									[app].[Reportes].ReporteId, [app].[Reportes].Codigo, 
+									[app].[Reportes].UsuarioId, [app].[Reportes].DptoId,
+									[app].[Reportes].Nombre, [app].[Reportes].Descripcion, 
+									[app].[Reportes].Simbolo, [app].[Reportes].FechaInicio, 
+									[app].[Reportes].Anio, [app].[Graficos].GraficoId, [app].[Graficos].Nombre
+						 FROM [app].[ActReportes] WITH (NOLOCK)
+						 INNER JOIN [app].[Reportes] ON [app].[Reportes].ReporteId = [app].[ActReportes].ReporteId
+						 INNER JOIN [app].[SeriesReportes] ON [app].[Reportes].ReporteId = [app].[SeriesReportes].ReporteId
+						 INNER JOIN [app].[Graficos] ON [app].[Graficos].GraficoId = [app].[Reportes].GraficoId
+							WHERE [app].[ActReportes].ReporteId = @ReporteId AND [app].[ActReportes].SemanaAct IN
+								(SELECT MAX([app].[ActReportes].SemanaAct)
+									FROM [app].[ActReportes] 
+										WHERE [app].[ActReportes].ReporteId = @ReporteId AND [app].[ActReportes].Estado = 1)
 				END	
 	END TRY
 		BEGIN CATCH

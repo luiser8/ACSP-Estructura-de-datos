@@ -3,23 +3,23 @@
 -- Create date: 12-03-2018
 -- Description: Edita Proyectos
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ProyectoEditar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ProyectoEditar
+IF ( OBJECT_ID('app.ProyectoEditar') IS NOT NULL ) 
+   DROP PROCEDURE app.ProyectoEditar
 GO
-CREATE PROCEDURE dbo.ProyectoEditar(
+CREATE PROCEDURE app.ProyectoEditar(
 	@ProyectoId INT,
 	@Codigo VARCHAR(50),
 	@DptoId INT,
 	@UsuarioId INT,
 	@Nombre VARCHAR(125),
 	@Descripcion VARCHAR(125),
-	@Grafico VARCHAR(125),
-	@Anio VARCHAR(11),
-	@FechaInicio VARCHAR(11),
-	@FechaFin VARCHAR(11))
+	@GraficoId INT,
+	@Anio SMALLINT,
+	@FechaInicio DATE,
+	@FechaFin DATE)
 AS
 BEGIN
 SET NOCOUNT ON;
@@ -28,18 +28,18 @@ SET NOCOUNT ON;
 			IF @DptoId IS NOT NULL AND @ProyectoId <> ''
 				AND ISNULL(LTRIM(RTRIM(@Codigo)),'') <> ''
 					IF NOT EXISTS(SELECT ProyectoId, Codigo
-						FROM dbo.Proyectos
+						FROM [app].[Proyectos]
 							WHERE ProyectoId = @ProyectoId)
 							BEGIN
 								RAISERROR ('Error! No existe este proyecto', 16, 1);
 								RETURN 1;
-							END	
+							END
 					BEGIN
-						UPDATE dbo.Proyectos SET Codigo = @Codigo, DptoId = @DptoId,
+						UPDATE [app].[Proyectos] SET Codigo = @Codigo, DptoId = @DptoId,
 										UsuarioId = @UsuarioId, Nombre = @Nombre,
-										Descripcion = @Descripcion, Grafico = @Grafico,
-										Anio = @Anio, FechaInicio = @FechaInicio, 
-										FechaFin = @FechaFin
+										Descripcion = @Descripcion, GraficoId = @GraficoId,
+										Anio = @Anio, FechaInicio = CONVERT(DATE, @FechaInicio, 105), 
+										FechaFin = CONVERT(DATE, @FechaFin, 105)
 						WHERE ProyectoId = @ProyectoId
 					END
 	END TRY

@@ -3,27 +3,27 @@
 -- Create date: 12-03-2018
 -- Description: Borrado lógico Departamentos
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.DepartamentoEliminar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.DepartamentoEliminar
+IF ( OBJECT_ID('app.DepartamentoEliminar') IS NOT NULL ) 
+   DROP PROCEDURE app.DepartamentoEliminar
 GO
-CREATE PROCEDURE dbo.DepartamentoEliminar(
+CREATE PROCEDURE app.DepartamentoEliminar(
 	@DptoId INT)
 AS
 BEGIN
 SET NOCOUNT ON;
 	BEGIN TRY
 		IF NOT EXISTS(SELECT DptoId 
-						FROM dbo.Departamentos
+						FROM [app].[Departamentos]
 						WHERE DptoId = @DptoId)
 			BEGIN
 				RAISERROR ('Error! No existe este Departamento', 16, 1);
 				RETURN 1;					
 			END
 		BEGIN
-			UPDATE dbo.Departamentos SET Estado = 0
+			UPDATE [app].[Departamentos] SET Estado = 0
 				WHERE DptoId = @DptoId
 		END
 	END TRY

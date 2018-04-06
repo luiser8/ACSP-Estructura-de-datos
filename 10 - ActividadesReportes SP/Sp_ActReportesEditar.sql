@@ -3,41 +3,41 @@
 -- Create date: 12-03-2018
 -- Description: Editar Actividades al Reportes
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ActReporteEditar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ActReporteEditar
+IF ( OBJECT_ID('app.ActReporteEditar') IS NOT NULL ) 
+   DROP PROCEDURE app.ActReporteEditar
 GO
-CREATE PROCEDURE dbo.ActReporteEditar(
+CREATE PROCEDURE app.ActReporteEditar(
 	@ActRepId INT,
 	@ReporteId INT,
-	@DescAct VARCHAR(125),
-	@PrimAct VARCHAR(125),
-	@SegAct VARCHAR(125),
-	@TercAct VARCHAR(125),
-	@CuartAct VARCHAR(125),
+	@Descripcion VARCHAR(125),
+	@PrimeraAct VARCHAR(125),
+	@SegundaAct VARCHAR(125),
+	@TerceraAct VARCHAR(125),
+	@CuartaAct VARCHAR(125),
 	@Contenido VARCHAR(125),
-	@SemAct VARCHAR(11))
+	@SemanaAct VARCHAR(11))
 AS
 BEGIN
 SET NOCOUNT ON;
 	BEGIN TRY
 		IF @ActRepId IS NOT NULL			
 			IF EXISTS(SELECT ActRepId, ReporteId 
-							FROM dbo.ActReportes
+							FROM [app].[ActReportes]
 							WHERE ActRepId = @ActRepId AND
 									ReporteId = @ReporteId)
 				BEGIN
-					UPDATE dbo.ActReportes
+					UPDATE [app].[ActReportes]
 						SET ReporteId = @ReporteId,
-							DescAct = @DescAct,
-							PrimAct = @PrimAct,
-							SegAct = @SegAct,
-							TercAct = @TercAct,
-							CuartAct = @CuartAct,
+							Descripcion = @Descripcion,
+							PrimeraAct = @PrimeraAct,
+							SegundaAct = @SegundaAct,
+							TerceraAct = @TerceraAct,
+							CuartaAct = @CuartaAct,
 							Contenido = @Contenido,
-							SemAct = @SemAct
+							SemanaAct = CONVERT(DATE, @SemanaAct, 105)
 								WHERE ActRepId = @ActRepId
 				END
 	END TRY

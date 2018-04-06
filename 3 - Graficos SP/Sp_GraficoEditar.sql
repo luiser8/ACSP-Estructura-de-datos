@@ -1,36 +1,36 @@
 -- =============================================
 -- Author: Luis E. Rondón
 -- Create date: 12-03-2018
--- Description: Edita los Departamentos
+-- Description: Edita los Graficos
 -- =============================================
-IF ( OBJECT_ID('app.DepartamentoEditar') IS NOT NULL ) 
-   DROP PROCEDURE app.DepartamentoEditar
+IF ( OBJECT_ID('app.GraficoEditar') IS NOT NULL ) 
+   DROP PROCEDURE app.GraficoEditar
 GO
 USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-CREATE PROCEDURE app.DepartamentoEditar(
-	@DptoId INT,
+CREATE PROCEDURE app.GraficoEditar(
+	@GraficoId INT,
 	@Nombre VARCHAR(50),
 	@Descripcion VARCHAR(125))
 AS
 BEGIN
 SET NOCOUNT ON;
 	BEGIN TRY
-		IF ISNUMERIC(@DptoId) = 1
-			IF @DptoId IS NOT NULL AND @DptoId <> ''
+		IF ISNUMERIC(@GraficoId) = 1
+			IF @GraficoId IS NOT NULL AND @GraficoId <> ''
 				AND ISNULL(LTRIM(RTRIM(@Nombre)),'') <> ''
-				IF NOT EXISTS(SELECT DptoId 
-						FROM [app].[Departamentos]
-						WHERE DptoId = @DptoId)
+				IF NOT EXISTS(SELECT GraficoId 
+						FROM [app].[Graficos]
+						WHERE GraficoId = @GraficoId)
 					BEGIN
-						RAISERROR ('Error! No existe este Departamento', 16, 1);
+						RAISERROR ('Error! No existe este Grafico', 16, 1);
 						RETURN 1;					
 					END
 				BEGIN
-					UPDATE [app].[Departamentos] SET Nombre = @Nombre,
+					UPDATE [app].[Graficos] SET Nombre = @Nombre,
 										Descripcion = @Descripcion
-					WHERE DptoId = @DptoId
+					WHERE GraficoId = @GraficoId
 				END
 	END TRY
 	BEGIN CATCH

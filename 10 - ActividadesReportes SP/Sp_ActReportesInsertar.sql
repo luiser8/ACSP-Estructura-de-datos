@@ -3,34 +3,34 @@
 -- Create date: 12-03-2018
 -- Description: Agrega Actividades al Reportes
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ActReporteInsertar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ActReporteInsertar
+IF ( OBJECT_ID('app.ActReporteInsertar') IS NOT NULL ) 
+   DROP PROCEDURE app.ActReporteInsertar
 GO
-CREATE PROCEDURE dbo.ActReporteInsertar(
+CREATE PROCEDURE app.ActReporteInsertar(
 	@ReporteId INT,
-	@DescAct VARCHAR(125),
-	@PrimAct VARCHAR(125),
-	@SegAct VARCHAR(125),
-	@TercAct VARCHAR(125),
-	@CuartAct VARCHAR(125),
+	@Descripcion VARCHAR(125),
+	@PrimeraAct VARCHAR(125),
+	@SegundaAct VARCHAR(125),
+	@TerceraAct VARCHAR(125),
+	@CuartaAct VARCHAR(125),
 	@Contenido VARCHAR(125),
-	@SemAct VARCHAR(11))
+	@SemanaAct VARCHAR(11))
 AS
 BEGIN
 SET NOCOUNT ON;
 	BEGIN TRY
 		IF @ReporteId IS NOT NULL 
 			IF EXISTS(SELECT ReporteId
-							FROM dbo.Reportes
+							FROM [app].[Reportes]
 							WHERE ReporteId = @ReporteId)
 				BEGIN
-					INSERT INTO dbo.ActReportes(ReporteId, DescAct, PrimAct, SegAct,
-													TercAct, CuartAct, Contenido, SemAct)
-					VALUES(@ReporteId, @DescAct, @PrimAct, @SegAct, @TercAct,
-							@CuartAct, @Contenido, @SemAct)
+					INSERT INTO [app].[ActReportes](ReporteId, Descripcion, PrimeraAct, SegundaAct,
+													TerceraAct, CuartaAct, Contenido, SemanaAct)
+					VALUES(@ReporteId, @Descripcion, @PrimeraAct, @SegundaAct, @TerceraAct,
+							@CuartaAct, @Contenido, CONVERT(DATE, @SemanaAct, 105))
 				END
 	END TRY
 	BEGIN CATCH

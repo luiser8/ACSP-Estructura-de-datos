@@ -3,18 +3,18 @@
 -- Create date: 12-03-2018
 -- Description: Agrega SerieReportes
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.SerieReporteInsertar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.SerieReporteInsertar
+IF ( OBJECT_ID('app.SerieReporteInsertar') IS NOT NULL ) 
+   DROP PROCEDURE app.SerieReporteInsertar
 GO
-CREATE PROCEDURE dbo.SerieReporteInsertar(
+CREATE PROCEDURE app.SerieReporteInsertar(
 	@ReporteId VARCHAR(50),
-	@PrimSerie VARCHAR(125),
-	@SegSerie VARCHAR(125),
-	@TercSerie VARCHAR(125),
-	@CuarSerie VARCHAR(125))
+	@PrimeraSerie VARCHAR(125),
+	@SegundaSerie VARCHAR(125),
+	@TerceraSerie VARCHAR(125),
+	@CuartaSerie VARCHAR(125))
 AS
 BEGIN
 SET NOCOUNT ON;
@@ -22,12 +22,12 @@ SET NOCOUNT ON;
 		IF @ReporteId IS NOT NULL
 				AND ISNULL(LTRIM(RTRIM(@ReporteId)),'') <> ''
 				IF EXISTS(SELECT ReporteId 
-								FROM dbo.Reportes
+								FROM [app].[Reportes]
 								WHERE ReporteId = @ReporteId)
 				BEGIN
-					INSERT INTO dbo.SeriesReportes(ReporteId, PrimSerie, SegSerie, 
-									TercSerie, CuarSerie)
-					VALUES(@ReporteId, @PrimSerie, @SegSerie, @TercSerie, @CuarSerie)
+					INSERT INTO [app].[SeriesReportes](ReporteId, PrimeraSerie, SegundaSerie, 
+									TerceraSerie, CuartaSerie)
+					VALUES(@ReporteId, @PrimeraSerie, @SegundaSerie, @TerceraSerie, @CuartaSerie)
 				END
 	END TRY
 		BEGIN CATCH

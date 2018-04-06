@@ -3,15 +3,15 @@
 -- Create date: 12-03-2018
 -- Description: Busca replanificacion de Proyectos
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ReplanificacionBuscar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ReplanificacionBuscar
+IF ( OBJECT_ID('app.ReplanificacionBuscar') IS NOT NULL ) 
+   DROP PROCEDURE app.ReplanificacionBuscar
 GO
-CREATE PROCEDURE dbo.ReplanificacionBuscar
+CREATE PROCEDURE app.ReplanificacionBuscar
 	@ReplanId INT = NULL,
-	@Estado INT = NULL
+	@Estado BIT = NULL
 AS
 BEGIN
 	BEGIN TRY
@@ -19,14 +19,14 @@ BEGIN
 			BEGIN
 					SELECT ReplanId, ProyectoId, Descripcion,
 							FechaAnterior, FechaPosterior, Estado, Fecha 
-								FROM dbo.Replanificacion WITH (NOLOCK)
+								FROM [app].[Replanificacion] WITH (NOLOCK)
 									WHERE ReplanId = @ReplanId
 				END
 			ELSE IF @ReplanId IS NULL AND @Estado IS NULL --Todos
 				BEGIN
 					SELECT ReplanId, ProyectoId, Descripcion,
 							FechaAnterior, FechaPosterior, Estado, Fecha 
-								FROM dbo.Replanificacion WITH (NOLOCK)
+								FROM [app].[Replanificacion] WITH (NOLOCK)
 				END
 	END TRY
 	BEGIN CATCH

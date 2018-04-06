@@ -3,7 +3,7 @@
 -- Create date: 12-03-2018
 -- Description: Busca Usuarios del sistema
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
 IF ( OBJECT_ID('dbo.UsuarioSistemaBuscar') IS NOT NULL ) 
@@ -11,7 +11,7 @@ IF ( OBJECT_ID('dbo.UsuarioSistemaBuscar') IS NOT NULL )
 GO
 CREATE PROCEDURE dbo.UsuarioSistemaBuscar
 	@UsuarioId INT = NULL,
-	@Estado INT = NULL
+	@Estado BIT = NULL
 AS
 BEGIN
 	BEGIN TRY

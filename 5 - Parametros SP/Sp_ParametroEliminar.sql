@@ -3,13 +3,13 @@
 -- Create date: 12-03-2018
 -- Description: Borrado lógico parametros de Proyectos
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ParametroEliminar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ParametroEliminar
+IF ( OBJECT_ID('app.ParametroEliminar') IS NOT NULL ) 
+   DROP PROCEDURE app.ParametroEliminar
 GO
-CREATE PROCEDURE dbo.ParametroEliminar(
+CREATE PROCEDURE app.ParametroEliminar(
 	@ParametroId INT)
 AS
 BEGIN
@@ -17,10 +17,10 @@ SET NOCOUNT ON;
 	BEGIN TRY
 		IF @ParametroId IS NOT NULL 		
 			IF EXISTS(SELECT ParametroId 
-							FROM dbo.Parametros
+							FROM [app].[Parametros]
 							WHERE ParametroId = @ParametroId)
 				BEGIN
-					UPDATE dbo.Parametros SET EstadoSemana = 0 
+					UPDATE [app].[Parametros] SET EstadoSemana = 0 
 						WHERE ParametroId = @ParametroId
 				END
 	END TRY

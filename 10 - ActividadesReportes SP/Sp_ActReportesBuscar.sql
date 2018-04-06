@@ -3,13 +3,13 @@
 -- Create date: 12-03-2018
 -- Description: Buscar Actividades al Reportes
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ActReporteBuscar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ActReporteBuscar
+IF ( OBJECT_ID('app.ActReporteBuscar') IS NOT NULL ) 
+   DROP PROCEDURE app.ActReporteBuscar
 GO
-CREATE PROCEDURE dbo.ActReporteBuscar
+CREATE PROCEDURE app.ActReporteBuscar
 	@ActRepId INT = NULL,
 	@ReporteId INT = NULL
 AS
@@ -18,18 +18,18 @@ BEGIN
 	BEGIN TRY
 		IF @ActRepId IS NOT NULL --Por Id
 			BEGIN
-				SELECT ActRepId, ReporteId, DescAct, PrimAct, 
-						SegAct, TercAct, CuartAct, 
-							SemAct, Contenido, Estado, Fecha
-							FROM dbo.ActReportes WITH (NOLOCK)
+				SELECT ActRepId, ReporteId, Descripcion, PrimeraAct, 
+						SegundaAct, TerceraAct, CuartaAct, 
+							SemanaAct, Contenido, Estado, Fecha
+							FROM [app].[ActReportes] WITH (NOLOCK)
 								WHERE ActRepId = @ActRepId
 			END
 		ELSE IF @ReporteId IS NULL AND @ActRepId IS NULL --Todos
 			BEGIN
-				SELECT ActRepId, ReporteId, DescAct, PrimAct, 
-						SegAct, TercAct, CuartAct, 
-							SemAct, Contenido, Estado, Fecha
-							FROM dbo.ActReportes WITH (NOLOCK)
+				SELECT ActRepId, ReporteId, Descripcion, PrimeraAct, 
+						SegundaAct, TerceraAct, CuartaAct, 
+							SemanaAct, Contenido, Estado, Fecha
+							FROM [app].[ActReportes] WITH (NOLOCK)
 			END
 	END TRY
 		BEGIN CATCH

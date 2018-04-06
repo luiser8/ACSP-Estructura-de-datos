@@ -3,15 +3,15 @@
 -- Create date: 12-03-2018
 -- Description: Busca Proyectos
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ProyectoBuscar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ProyectoBuscar
+IF ( OBJECT_ID('app.ProyectoBuscar') IS NOT NULL ) 
+   DROP PROCEDURE app.ProyectoBuscar
 GO
-CREATE PROCEDURE dbo.ProyectoBuscar
+CREATE PROCEDURE app.ProyectoBuscar
 	@ProyectoId INT = NULL,
-	@Estado INT = NULL
+	@Estado BIT = NULL
 AS
 BEGIN
 	BEGIN TRY
@@ -19,18 +19,18 @@ BEGIN
 				BEGIN
 					SELECT ProyectoId, Codigo, DptoId,
 							UsuarioId, Nombre, Descripcion,
-							 Grafico, Anio, FechaInicio,
+							 GraficoId, Anio, FechaInicio,
 							  FechaFin, Estado, Fecha 
-								FROM dbo.Proyectos WITH (NOLOCK)
+								FROM [app].[Proyectos] WITH (NOLOCK)
 									WHERE ProyectoId = @ProyectoId
 				END
 			ELSE IF @ProyectoId IS NULL AND @Estado IS NULL --Todos
 				BEGIN
 						SELECT ProyectoId, Codigo, DptoId,
 							UsuarioId, Nombre, Descripcion,
-							 Grafico, Anio, FechaInicio,
+							 GraficoId, Anio, FechaInicio,
 							  FechaFin, Estado, Fecha 
-								FROM dbo.Proyectos WITH (NOLOCK)
+								FROM [app].[Proyectos] WITH (NOLOCK)
 				END
 	END TRY
 		BEGIN CATCH

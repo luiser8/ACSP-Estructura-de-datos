@@ -1,15 +1,15 @@
 -- =============================================
 -- Author: Luis E. Rondón
 -- Create date: 12-03-2018
--- Description: Agrega los Departamentos
+-- Description: Agrega los Graficos
 -- =============================================
 USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('app.DepartamentoInsertar') IS NOT NULL ) 
-   DROP PROCEDURE app.DepartamentoInsertar
+IF ( OBJECT_ID('app.GraficoInsertar') IS NOT NULL ) 
+   DROP PROCEDURE app.GraficoInsertar
 GO
-CREATE PROCEDURE app.DepartamentoInsertar(
+CREATE PROCEDURE app.GraficoInsertar(
 	@Nombre VARCHAR(50),
 	@Descripcion VARCHAR(125))
 AS
@@ -19,14 +19,14 @@ SET NOCOUNT ON;
 		IF @Nombre IS NOT NULL 
 			AND ISNULL(LTRIM(RTRIM(@Nombre)),'') <> ''
 			IF EXISTS(SELECT Nombre
-							FROM [app].[Departamentos]
+							FROM [app].[Graficos]
 							WHERE Nombre = @Nombre)
 				BEGIN
-					RAISERROR ('Error! Existe este Departamento!', 16, 1);
+					RAISERROR ('Error! Existe este Grafico!', 16, 1);
 					RETURN 1;					
 				END
 			BEGIN
-				INSERT INTO [app].[Departamentos](Nombre, Descripcion)
+				INSERT INTO [app].[Graficos](Nombre, Descripcion)
 				VALUES(@Nombre, @Descripcion)
 			END
 	END TRY

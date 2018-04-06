@@ -3,27 +3,27 @@
 -- Create date: 12-03-2018
 -- Description: Edita parametros de Proyectos
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ParametroEditar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ParametroEditar
+IF ( OBJECT_ID('app.ParametroEditar') IS NOT NULL ) 
+   DROP PROCEDURE app.ParametroEditar
 GO
-CREATE PROCEDURE dbo.ParametroEditar(
+CREATE PROCEDURE app.ParametroEditar(
 	@ParametroId INT,
 	@ProyectoId INT,
-	@Avance INT)
+	@Avance TINYINT)
 AS
 BEGIN
 SET NOCOUNT ON;
 	BEGIN TRY
 		IF @ParametroId IS NOT NULL		
 			IF EXISTS(SELECT ParametroId, ProyectoId 
-							FROM dbo.Parametros
+							FROM [app].[Parametros]
 							WHERE ParametroId = @ParametroId AND
 									ProyectoId = @ProyectoId)
 				BEGIN
-					UPDATE dbo.Parametros
+					UPDATE [app].[Parametros]
 						SET Avance = @Avance, 
 							EstadoSemana = 0, 
 							Establecido = 1

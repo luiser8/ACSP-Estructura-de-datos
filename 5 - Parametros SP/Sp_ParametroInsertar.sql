@@ -3,24 +3,24 @@
 -- Create date: 12-03-2018
 -- Description: Agrega parametros de Proyectos
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ParametroInsertar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ParametroInsertar
+IF ( OBJECT_ID('app.ParametroInsertar') IS NOT NULL ) 
+   DROP PROCEDURE app.ParametroInsertar
 GO
-CREATE PROCEDURE dbo.ParametroInsertar(
+CREATE PROCEDURE app.ParametroInsertar(
 	@ProyectoId INT,
 	@Semana VARCHAR(11),
-	@CantidadDias INT)
+	@CantidadDias TINYINT)
 AS
 BEGIN
 SET NOCOUNT ON;
 	BEGIN TRY
 		IF @ProyectoId IS NOT NULL
 			BEGIN
-				INSERT INTO dbo.Parametros(ProyectoId, Semana, CantidadDias)
-				VALUES(@ProyectoId, @Semana, @CantidadDias)
+				INSERT INTO [app].[Parametros](ProyectoId, Semana, CantidadDias)
+				VALUES(@ProyectoId, CONVERT(DATE, @Semana, 105), @CantidadDias)
 			END
 	END TRY
 	BEGIN CATCH

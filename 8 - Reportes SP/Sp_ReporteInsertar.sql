@@ -3,22 +3,22 @@
 -- Create date: 12-03-2018
 -- Description: Agrega Reportes
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ReporteInsertar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ReporteInsertar
+IF ( OBJECT_ID('app.ReporteInsertar') IS NOT NULL ) 
+   DROP PROCEDURE app.ReporteInsertar
 GO
-CREATE PROCEDURE dbo.ReporteInsertar(
+CREATE PROCEDURE app.ReporteInsertar(
 	@Codigo VARCHAR(50),
 	@UsuarioId INT,
 	@DptoId INT,
 	@Nombre VARCHAR(125),
 	@Descripcion VARCHAR(125),
-	@Grafico VARCHAR(125),
+	@GraficoId INT,
 	@Simbolo VARCHAR(11),
 	@FechaInicio VARCHAR(11),
-	@Anio VARCHAR(11))
+	@Anio SMALLINT)
 AS
 BEGIN
 SET NOCOUNT ON;
@@ -27,15 +27,15 @@ SET NOCOUNT ON;
 			@DptoId IS NOT NULL
 				AND ISNULL(LTRIM(RTRIM(@Codigo)),'') <> ''
 				IF NOT EXISTS(SELECT Codigo, Nombre 
-								FROM dbo.Reportes
+								FROM [app].[Reportes]
 								WHERE Codigo = @Codigo)
-				BEGIN
-					INSERT INTO dbo.Reportes(Codigo, UsuarioId, DptoId, 
-												Nombre, Descripcion, Grafico,
+				BEGIN 
+					INSERT INTO [app].[Reportes](Codigo, UsuarioId, DptoId, 
+												Nombre, Descripcion, GraficoId,
 												Simbolo, FechaInicio, Anio)
 					VALUES(@Codigo, @UsuarioId, @DptoId, @Nombre, 
-								@Descripcion, @Grafico, @Simbolo,
-								@FechaInicio, @Anio)
+								@Descripcion, @GraficoId, @Simbolo,
+								CONVERT(DATE, @FechaInicio, 105), @Anio)
 				END
 	END TRY
 		BEGIN CATCH

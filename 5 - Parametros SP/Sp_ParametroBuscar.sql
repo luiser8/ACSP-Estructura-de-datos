@@ -3,15 +3,15 @@
 -- Create date: 12-03-2018
 -- Description: Busca parametros de Proyectos
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ParametroBuscar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ParametroBuscar
+IF ( OBJECT_ID('app.ParametroBuscar') IS NOT NULL ) 
+   DROP PROCEDURE app.ParametroBuscar
 GO
-CREATE PROCEDURE dbo.ParametroBuscar
+CREATE PROCEDURE app.ParametroBuscar
 	@ProyectoId INT = NULL,
-	@Estado INT = NULL
+	@Estado BIT = NULL
 AS
 SET NOCOUNT ON;
 BEGIN
@@ -21,7 +21,7 @@ BEGIN
 					SELECT ParametroId, ProyectoId, Semana,
 							CantidadDias, Avance, EstadoSemana,
 							 Establecido, Estado, Fecha 
-								FROM dbo.Parametros WITH (NOLOCK)
+								FROM [app].[Parametros] WITH (NOLOCK)
 									WHERE ProyectoId = @ProyectoId
 				END
 			ELSE IF @ProyectoId IS NULL AND @Estado IS NULL --Todos
@@ -29,7 +29,7 @@ BEGIN
 						SELECT ParametroId, ProyectoId, Semana,
 							CantidadDias, Avance, EstadoSemana,
 							 Establecido, Estado, Fecha 
-								FROM dbo.Parametros WITH (NOLOCK)
+								FROM [app].[Parametros] WITH (NOLOCK)
 				END	
 	END TRY
 	BEGIN CATCH

@@ -3,34 +3,34 @@
 -- Create date: 12-03-2018
 -- Description: Buscar Reportes
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ReporteBuscar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ReporteBuscar
+IF ( OBJECT_ID('app.ReporteBuscar') IS NOT NULL ) 
+   DROP PROCEDURE app.ReporteBuscar
 GO
-CREATE PROCEDURE dbo.ReporteBuscar
+CREATE PROCEDURE app.ReporteBuscar
 	@ReporteId INT = NULL,
-	@Estado INT = NULL
+	@Estado BIT = NULL
 AS
 BEGIN
 	BEGIN TRY
 		IF @ReporteId IS NOT NULL --Por Id
 			BEGIN
 				SELECT ReporteId, Codigo, UsuarioId, DptoId, 
-						Nombre, Descripcion, Grafico,
+						Nombre, Descripcion, GraficoId,
 						 Simbolo, FechaInicio, Anio,
 							Estado, Fecha
-							FROM dbo.Reportes WITH (NOLOCK)
+							FROM [app].[Reportes] WITH (NOLOCK)
 								WHERE ReporteId = @ReporteId
 			END
 		ELSE IF @ReporteId IS NULL AND @Estado IS NULL --Todos
 			BEGIN
 					SELECT ReporteId, Codigo, UsuarioId, DptoId, 
-						Nombre, Descripcion, Grafico,
+						Nombre, Descripcion, GraficoId,
 						 Simbolo, FechaInicio, Anio,
 							Estado, Fecha
-							FROM dbo.Reportes WITH (NOLOCK)
+							FROM [app].[Reportes] WITH (NOLOCK)
 			END
 	END TRY
 		BEGIN CATCH

@@ -3,23 +3,23 @@
 -- Create date: 12-03-2018
 -- Description: Editar Reportes
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ReporteEditar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ReporteEditar
+IF ( OBJECT_ID('app.ReporteEditar') IS NOT NULL ) 
+   DROP PROCEDURE app.ReporteEditar
 GO
-CREATE PROCEDURE dbo.ReporteEditar(
+CREATE PROCEDURE app.ReporteEditar(
 	@ReporteId INT,
 	@Codigo VARCHAR(50),
 	@UsuarioId INT,
 	@DptoId INT,
 	@Nombre VARCHAR(125),
 	@Descripcion VARCHAR(125),
-	@Grafico VARCHAR(125),
+	@GraficoId INT,
 	@Simbolo VARCHAR(11),
-	@FechaInicio VARCHAR(11),
-	@Anio VARCHAR(11))
+	@FechaInicio DATE,
+	@Anio SMALLINT)
 AS
 BEGIN
 SET NOCOUNT ON;
@@ -28,13 +28,13 @@ SET NOCOUNT ON;
 			IF @DptoId IS NOT NULL AND @ReporteId <> ''
 				AND ISNULL(LTRIM(RTRIM(@Codigo)),'') <> ''
 				IF EXISTS(SELECT ReporteId, Codigo
-						FROM dbo.Reportes
+						FROM [app].[Reportes]
 						WHERE ReporteId = @ReporteId)
 				BEGIN
-					UPDATE dbo.Reportes SET Codigo = @Codigo, DptoId = @DptoId,
+					UPDATE [app].[Reportes] SET Codigo = @Codigo, DptoId = @DptoId,
 										UsuarioId = @UsuarioId, Nombre = @Nombre,
-										Descripcion = @Descripcion, Grafico = @Grafico,
-										Simbolo = @Simbolo, FechaInicio = @FechaInicio,
+										Descripcion = @Descripcion, GraficoId = @GraficoId,
+										Simbolo = @Simbolo, FechaInicio = CONVERT(DATE, @FechaInicio, 105),
 										Anio = @Anio
 					WHERE ReporteId = @ReporteId
 				END

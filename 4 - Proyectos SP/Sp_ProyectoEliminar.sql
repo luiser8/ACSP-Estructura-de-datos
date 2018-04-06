@@ -3,27 +3,27 @@
 -- Create date: 12-03-2018
 -- Description: Borrado lógico Proyectos
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ProyectoEliminar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ProyectoEliminar
+IF ( OBJECT_ID('app.ProyectoEliminar') IS NOT NULL ) 
+   DROP PROCEDURE app.ProyectoEliminar
 GO
-CREATE PROCEDURE dbo.ProyectoEliminar(
+CREATE PROCEDURE app.ProyectoEliminar(
 	@ProyectoId INT)
 AS
 BEGIN
 SET NOCOUNT ON;
 	BEGIN TRY	
 		IF NOT EXISTS(SELECT ProyectoId 
-						FROM dbo.Proyectos
+						FROM [app].[Proyectos]
 						WHERE ProyectoId = @ProyectoId)
 				BEGIN
 					RAISERROR ('Error! No existe este proyecto', 16, 1);
 					RETURN 1;
 				END	
 		BEGIN
-			UPDATE dbo.Proyectos SET Estado = 0 WHERE ProyectoId = @ProyectoId
+			UPDATE [app].[Proyectos] SET Estado = 0 WHERE ProyectoId = @ProyectoId
 		END
 	END TRY
 	BEGIN CATCH

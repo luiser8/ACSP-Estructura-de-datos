@@ -3,20 +3,20 @@
 -- Create date: 12-03-2018
 -- Description: Agrega Proyectos
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ProyectoInsertar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ProyectoInsertar
+IF ( OBJECT_ID('app.ProyectoInsertar') IS NOT NULL ) 
+   DROP PROCEDURE app.ProyectoInsertar
 GO
-CREATE PROCEDURE dbo.ProyectoInsertar(
+CREATE PROCEDURE app.ProyectoInsertar(
 	@Codigo VARCHAR(50),
 	@DptoId INT,
 	@UsuarioId INT,
 	@Nombre VARCHAR(125),
 	@Descripcion VARCHAR(125),
-	@Grafico VARCHAR(125),
-	@Anio VARCHAR(11),
+	@GraficoId INT,
+	@Anio SMALLINT,
 	@FechaInicio VARCHAR(11),
 	@FechaFin VARCHAR(11))
 AS
@@ -27,19 +27,19 @@ SET NOCOUNT ON;
 			@DptoId IS NOT NULL
 				AND ISNULL(LTRIM(RTRIM(@Codigo)),'') <> ''
 					IF EXISTS(SELECT Codigo, Nombre 
-								FROM dbo.Proyectos
+								FROM [app].[Proyectos]
 								WHERE Codigo = @Codigo)
 						BEGIN
 							RAISERROR ('Error! Existe este proyecto', 16, 1);
 							RETURN 1;					
 						END
 					BEGIN
-						INSERT INTO dbo.Proyectos(Codigo, DptoId, UsuarioId, 
-												Nombre, Descripcion, Grafico,
+						INSERT INTO [app].[Proyectos](Codigo, DptoId, UsuarioId, 
+												Nombre, Descripcion, GraficoId,
 												Anio, FechaInicio, FechaFin)
 						VALUES(@Codigo, @DptoId, @UsuarioId, 
-							@Nombre, @Descripcion, @Grafico, 
-							@Anio, @FechaInicio, @FechaFin)
+							@Nombre, @Descripcion, @GraficoId, 
+							@Anio, CONVERT(DATE, @FechaInicio, 105), CONVERT(DATE, @FechaFin, 105))
 				END
 	END TRY
 	BEGIN CATCH

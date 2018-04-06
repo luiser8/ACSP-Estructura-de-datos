@@ -3,7 +3,7 @@
 -- Create date: 12-03-2018
 -- Description: Borrado lógico Usuarios del sistema
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
 IF ( OBJECT_ID('dbo.UsuarioSistemaEliminar') IS NOT NULL ) 

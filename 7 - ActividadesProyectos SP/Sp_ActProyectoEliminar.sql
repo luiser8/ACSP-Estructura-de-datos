@@ -3,13 +3,13 @@
 -- Create date: 12-03-2018
 -- Description: Borrado lógico Actividades al proyecto
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ActProyectoEliminar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ActProyectoEliminar
+IF ( OBJECT_ID('app.ActProyectoEliminar') IS NOT NULL ) 
+   DROP PROCEDURE app.ActProyectoEliminar
 GO
-CREATE PROCEDURE dbo.ActProyectoEliminar(
+CREATE PROCEDURE app.ActProyectoEliminar(
 	@ActProyId INT)
 AS
 BEGIN
@@ -17,10 +17,10 @@ SET NOCOUNT ON;
 	BEGIN TRY
 		IF @ActProyId IS NOT NULL 		
 			IF EXISTS(SELECT ActProyId
-							FROM dbo.ActProyectos
+							FROM [app].[ActProyectos]
 							WHERE ActProyId = @ActProyId)
 				BEGIN
-					UPDATE dbo.ActProyectos SET Estado = 0
+					UPDATE [app].[ActProyectos] SET Estado = 0
 						WHERE ActProyId = @ActProyId
 				END
 	END TRY

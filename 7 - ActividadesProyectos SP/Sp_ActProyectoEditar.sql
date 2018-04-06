@@ -3,41 +3,41 @@
 -- Create date: 12-03-2018
 -- Description: Edita Actividades al proyecto
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.ActProyectoEditar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.ActProyectoEditar
+IF ( OBJECT_ID('app.ActProyectoEditar') IS NOT NULL ) 
+   DROP PROCEDURE app.ActProyectoEditar
 GO
-CREATE PROCEDURE dbo.ActProyectoEditar(
+CREATE PROCEDURE app.ActProyectoEditar(
 	@ActProyId INT,
-	@TipoAct TINYINT, -- 1 OR 2
+	@TipoAct BIT, -- 1 OR 2
 	@ProyectoId INT,
 	@ParametroId INT,
-	@DescripcionAct VARCHAR(255),
-	@PlanAct VARCHAR(11),
-	@RealAct VARCHAR(11),
-	@FechaAct VARCHAR(11),
-	@DesviacionAct VARCHAR(11))
+	@Descripcion VARCHAR(255),
+	@PlanAct TINYINT,
+	@RealAct TINYINT,
+	@FechaAct DATE,
+	@Desviacion TINYINT)
 AS
 BEGIN
 SET NOCOUNT ON;
 	BEGIN TRY
 		IF @ActProyId IS NOT NULL
 			IF EXISTS(SELECT ActProyId, ProyectoId
-							FROM dbo.ActProyectos
+							FROM [app].[ActProyectos]
 							WHERE ActProyId = @ActProyId AND
 									ProyectoId = @ProyectoId)
 				BEGIN
-					UPDATE dbo.ActProyectos
+					UPDATE [app].[ActProyectos]
 						SET TipoAct = @TipoAct, 
 							ProyectoId = @ProyectoId,
 							ParametroId = @ParametroId,
-							DescripcionAct = @DescripcionAct,
+							Descripcion = @Descripcion,
 							PlanAct = @PlanAct,
 							RealAct = @RealAct,
-							FechaAct = @FechaAct,
-							DesviacionAct = @DesviacionAct
+							FechaAct = CONVERT(DATE, @FechaAct, 105),
+							Desviacion = @Desviacion
 								WHERE ActProyId = @ActProyId
 				END
 	END TRY

@@ -3,7 +3,7 @@
 -- Create date: 12-03-2018
 -- Description: Agrega Usuarios del sistema
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
 IF ( OBJECT_ID('dbo.UsuarioSistemaInsertar') IS NOT NULL ) 
@@ -15,7 +15,7 @@ CREATE PROCEDURE dbo.UsuarioSistemaInsertar(
 	@Apellidos VARCHAR(125),
 	@Correo VARCHAR(125),
 	@Clave VARCHAR(125),
-	@NivelAcceso TINYINT)
+	@NivelAcceso BIT)
 AS
 BEGIN
 SET NOCOUNT ON;

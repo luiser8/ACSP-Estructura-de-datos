@@ -3,15 +3,15 @@
 -- Create date: 12-03-2018
 -- Description: Busca Departamentos
 -- =============================================
-USE Avior
+USE AviorCSP
 DBCC FREEPROCCACHE WITH NO_INFOMSGS
 GO
-IF ( OBJECT_ID('dbo.DepartamentoBuscar') IS NOT NULL ) 
-   DROP PROCEDURE dbo.DepartamentoBuscar
+IF ( OBJECT_ID('app.DepartamentoBuscar') IS NOT NULL ) 
+   DROP PROCEDURE app.DepartamentoBuscar
 GO
-CREATE PROCEDURE dbo.DepartamentoBuscar
+CREATE PROCEDURE app.DepartamentoBuscar
 	@DptoId INT = NULL,
-	@Estado INT = NULL
+	@Estado BIT = NULL
 AS
 BEGIN
 	BEGIN TRY
@@ -19,14 +19,14 @@ BEGIN
 				BEGIN
 					SELECT DptoId, Nombre, Descripcion,
 							Estado, Fecha 
-								FROM dbo.Departamentos WITH (NOLOCK)
+								FROM [app].[Departamentos] WITH (NOLOCK)
 									WHERE DptoId = @DptoId
 				END
 			ELSE IF @DptoId IS NULL AND @Estado IS NULL --Todos
 				BEGIN
 					SELECT DptoId, Nombre, Descripcion,
 							Estado, Fecha 
-								FROM dbo.Departamentos WITH (NOLOCK)
+								FROM [app].[Departamentos] WITH (NOLOCK)
 				END
 	END TRY
 	BEGIN CATCH
