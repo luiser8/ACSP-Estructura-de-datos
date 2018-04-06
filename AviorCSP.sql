@@ -30,7 +30,7 @@ CREATE TABLE [app].[Proyectos]
         ProyectoId					INT	IDENTITY(1,1)			NOT NULL  ,  -- Identificador del proyecto
 		Codigo						VARCHAR(25)					NOT NULL  ,  -- Codigo especial del proyecto
  		DptoId						INT							NOT NULL  , -- Identificador del departamento a cual pertence
-		UsuarioId					INT	REFERENCES seg.Usuarios	NOT NULL  , --Identificador del usuario del sistema a cual pertence
+		UsuarioId					INT	REFERENCES [seg].[Usuarios]	NOT NULL  , --Identificador del usuario del sistema a cual pertence
         Nombre						VARCHAR(125)				NOT NULL  , -- Nombre del proyecto
         Descripcion					VARCHAR(255)				NOT NULL  , -- Descripcion del proyecto        
         GraficoId					INT	REFERENCES [app].[Graficos]		NOT NULL  , -- Identificador del tipo de grafico del proyecto
